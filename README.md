@@ -8,8 +8,7 @@ A comprehensive template for getting started with Context Engineering - the disc
 
 ```bash
 # 1. Clone this template
-git clone https://github.com/coleam00/Context-Engineering-Intro.git
-cd Context-Engineering-Intro
+git clone https://github.com/adriestevezdev/context-engineering-saas
 
 # 2. Set up your project rules (optional - template provided)
 # Edit CLAUDE.md to add your project-specific guidelines
