@@ -1,117 +1,274 @@
-## 📦 SaaS MVP Template Instructions
+# CLAUDE.md
 
-**This is a template for creating SaaS MVPs. Users should modify and adapt this template to build their own ideas and platforms. These instructions help AI assistants understand how to work with this template.**
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-### 🔄 Project Awareness & Context
-- **Always read `PLANNING.md`** at the start of a new conversation to understand the project's architecture, goals, style, and constraints.
-- **Check `TASK.md`** before starting a new task. If the task isn't listed, add it with a brief description and today's date.
-- **Use consistent naming conventions, file structure, and architecture patterns** as described in `PLANNING.md`.
-- **Use docker-compose** for development environment orchestration.
+## 🏋️ Project Overview
 
-### 🏗️ SaaS MVP Architecture
-**Note: This is the base architecture for the template. Users will extend and modify based on their specific SaaS requirements.**
-- **Frontend**: Next.js (TypeScript) in `/frontend` directory
-  - Use App Router for routing
-  - Use React Server Components where appropriate
-  - Use TypeScript for type safety
-  - Use Tailwind CSS for styling
-  - Use `next/font` for optimized font loading
-- **Backend**: FastAPI (Python) in `/backend` directory
-  - Use FastAPI with Pydantic for data validation
-  - Use CORS middleware for cross-origin requests
-  - Use SQLAlchemy as ORM
-  - Use Alembic for database migrations
-  - Follow FastAPI project structure conventions
-- **Database**: PostgreSQL with Adminer for database management
-- **Development**: All services orchestrated via `docker-compose.yml`
+This is **FitPro**, a comprehensive fitness management SaaS platform built as an MVP template that users can customize for their specific fitness business needs. The application provides user authentication, class scheduling, workout tracking, nutrition management, and admin functionality.
 
-### 🧱 Code Structure & Modularity
-- **Never create a file longer than 500 lines of code.** If a file approaches this limit, refactor by splitting it into modules or helper files.
-- **Backend (FastAPI)**:
-  - Organize by features/modules in `app/` directory
-  - Separate files for:
-    - `routers/` - API endpoints grouped by feature
-    - `schemas/` - Pydantic models for request/response
-    - `models/` - SQLAlchemy database models
-    - `services/` - Business logic
-    - `dependencies/` - Shared dependencies and utilities
-  - Use dependency injection for database sessions, auth, etc.
-- **Frontend (Next.js)**:
-  - Use feature-based folder structure in `app/` directory
-  - Separate components into `components/` directory
-  - Use custom hooks in `hooks/` directory
-  - Keep API calls in `lib/api/` directory
-- **Use environment variables** for configuration (`.env` files)
+## 🏗️ Architecture & Tech Stack
 
-### 🧪 Testing & Reliability
-- **Backend Tests**:
-  - Use pytest with `httpx` for async tests
-  - Use `pytest-asyncio` for async test support
-  - Create tests in `tests/` directory mirroring app structure
-  - Test models, schemas, endpoints, and services
-  - Use `factory_boy` or custom fixtures for test data
-  - Aim for >80% test coverage
-- **Frontend Tests**:
-  - Use Jest and React Testing Library
-  - Create tests alongside components (`.test.tsx` files)
-  - Test components, hooks, and utility functions
-  - Use `msw` for API mocking
-- **Integration Tests**:
-  - Test API integration between frontend and backend
-  - Use Docker Compose for consistent test environment
+### Frontend (Next.js 15 + TypeScript)
+- **Framework**: Next.js 15 with App Router (`/frontend`)
+- **Authentication**: Clerk integration with multiple auth providers
+- **Styling**: Tailwind CSS 4
+- **Language**: TypeScript (strict mode, no `any` types)
+- **Key Features**: Server components, client components, middleware for auth
 
-### ✅ Task Completion
-- **Mark completed tasks in `TASK.md`** immediately after finishing them.
-- Add new sub-tasks or TODOs discovered during development to `TASK.md` under a "Discovered During Work" section.
-- Document any Docker or deployment-related tasks.
+### Backend (FastAPI + Python)
+- **Framework**: FastAPI with async/await (`/backend`) 
+- **Database**: PostgreSQL 16 with AsyncPG driver
+- **ORM**: SQLAlchemy 2.0+ (async)
+- **Migrations**: Alembic
+- **Authentication**: Clerk JWT validation
+- **API Design**: RESTful with `/api/v1/` versioning
 
-### 📎 Style & Conventions
-- **Backend (Python/FastAPI)**:
-  - Follow PEP8, use type hints extensively
-  - Format with `black` and lint with `ruff`
-  - Use Pydantic models for all request/response validation
-  - Use async/await for all endpoints and database operations
-  - Follow FastAPI best practices and conventions
-- **Frontend (TypeScript/Next.js)**:
-  - Use ESLint and Prettier for formatting
-  - Follow React/Next.js best practices
-  - Use TypeScript strictly (no `any` types)
-  - Follow component naming conventions (PascalCase)
-- **API Design**:
-  - RESTful API design
-  - Consistent JSON response format
-  - Proper HTTP status codes
-  - API versioning (e.g., `/api/v1/`)
+### Development Environment
+- **Orchestration**: Docker Compose with hot-reload
+- **Services**: frontend (3000), backend (8000), db (5432), adminer (8080)
+- **Network**: All services on `fitpro-network` bridge
 
-### 🐳 Docker Development Workflow
-- **Always use `docker-compose`** for local development
-- Services defined in `docker-compose.yml`:
-  - `frontend`: Next.js development server
-  - `backend`: FastAPI with Uvicorn (auto-reload enabled)
-  - `db`: PostgreSQL database
-  - `adminer`: Database management UI
-- **Volume mounts** for hot-reloading in development
-- **Environment variables** managed via `.env` files
-- **Networking**: All services on the same Docker network
+## 🚀 Common Development Commands
 
-### 📚 Documentation & Explainability
-- **Update `README.md`** with:
-  - Docker setup instructions
-  - Environment variable documentation
-  - API endpoint documentation
-  - Development workflow guides
-- **Comment non-obvious code** and ensure everything is understandable to a mid-level developer.
-- **API Documentation**: Use FastAPI's automatic OpenAPI/Swagger docs
-- **Frontend Documentation**: Use JSDoc for complex components
+### Docker Development (Primary)
+```bash
+# Start all services with hot-reload
+docker compose up --build
 
-### 🧠 AI Behavior Rules
-**When helping users with this template:**
-- **Understand this is a template** that users will customize for their specific SaaS idea
-- **Guide users in adapting the template** rather than treating it as a fixed project
-- **Never assume missing context. Ask questions if uncertain.**
-- **Never hallucinate libraries or functions** – only use known, verified packages.
-- **Always confirm file paths and module names** exist before referencing them in code or tests.
-- **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `TASK.md`.
-- **Use Context7 MCP** for checking latest documentation and best practices.
-- **Help users adapt the template** to their specific SaaS requirements while maintaining the architectural patterns.
-- **Suggest modifications and extensions** based on the user's specific use case.
+# Start specific service
+docker compose up frontend backend
+
+# View logs
+docker compose logs -f [service_name]
+
+# Stop all services
+docker compose down
+```
+
+### Frontend Commands (from `/frontend`)
+```bash
+npm run dev      # Development server (port 3000)
+npm run build    # Production build
+npm run start    # Production server
+npm run lint     # ESLint check
+```
+
+### Backend Commands (from `/backend`)
+```bash
+# Development server (port 8000)
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+# Database migrations
+alembic upgrade head    # Apply migrations
+alembic revision --autogenerate -m "message"  # Create migration
+
+# Testing
+pytest                  # Run all tests
+pytest tests/test_specific.py  # Run specific test
+pytest --cov=app        # Run with coverage
+```
+
+## 📁 Code Architecture Patterns
+
+### Backend Structure (`/backend/app/`)
+```
+app/
+├── main.py              # FastAPI app, CORS, router registration
+├── config.py            # Pydantic settings with env vars
+├── database.py          # SQLAlchemy async setup
+├── auth.py              # Clerk JWT validation
+├── dependencies/        # Shared dependencies (auth, db sessions)
+├── models/              # SQLAlchemy models (base.py + feature models)
+├── schemas/             # Pydantic request/response models
+├── routers/             # API endpoints grouped by feature
+└── services/            # Business logic layer
+```
+
+### Frontend Structure (`/frontend/src/`)
+```
+src/
+├── app/                 # Next.js App Router pages
+│   ├── (auth)/         # Auth group (sign-in, sign-up, onboarding)
+│   ├── dashboard/      # Main dashboard
+│   ├── classes/        # Class scheduling
+│   ├── workouts/       # Workout tracking
+│   ├── nutrition/      # Nutrition management
+│   ├── profile/        # User profiles
+│   └── admin/          # Admin panel
+└── lib/
+    └── api.ts          # Centralized API client with Clerk auth
+```
+
+### API Client Pattern
+- Use `ApiClient` class in `/frontend/src/lib/api.ts`
+- Server components: `getServerApiClient()` 
+- Client components: `createClientApiClient(token)`
+- All endpoints defined in `endpoints` object
+- Automatic Clerk token injection
+
+### Database Model Pattern
+- Inherit from `Base` in `models/base.py`
+- Use async SQLAlchemy 2.0+ syntax
+- UUID primary keys with `id: Mapped[str]`
+- Timestamps: `created_at`, `updated_at`
+- Foreign keys use proper relationships
+
+### Authentication Flow
+- Clerk handles all auth UI and sessions
+- Backend validates JWT tokens in `auth.py:validate_clerk_token()`
+- Use `Depends(get_current_user)` for protected endpoints
+- Frontend middleware redirects unauthenticated users
+
+## 🔧 Environment Configuration
+
+### Required Environment Variables
+```bash
+# Clerk Authentication (get from clerk.com dashboard)
+CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+CLERK_JWT_KEY=-----BEGIN PUBLIC KEY-----...
+
+# Database
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/fitpro_db
+
+# Development
+DEBUG=True
+CORS_ORIGINS=http://localhost:3000
+```
+
+### Environment Files
+- Root: `.env` (Docker Compose variables)
+- Frontend: Uses `NEXT_PUBLIC_*` vars from Docker environment
+- Backend: Uses Pydantic settings with `.env` file support
+
+## 📊 Database Schema Overview
+
+### Core Models
+- **User**: Clerk user sync with fitness profiles
+- **FitnessClass**: Gym classes with instructor, capacity, schedule
+- **Workout**: Exercise templates and user workout logs  
+- **Exercise**: Individual exercises with sets, reps, weight
+- **NutritionPlan**: Meal plans with calorie/macro tracking
+- **Food**: Food database with nutritional information
+
+### Key Relationships
+- Users can book multiple classes (many-to-many)
+- Users have multiple workout logs (one-to-many)
+- Workouts contain multiple exercises (one-to-many)
+- Nutrition plans contain multiple meals (one-to-many)
+
+## 🧪 Testing Strategy
+
+### Backend Testing (`/backend/tests/`)
+- **Framework**: pytest with pytest-asyncio
+- **Structure**: Mirror app structure in tests/
+- **Database**: Use test database with async fixtures
+- **API Testing**: httpx async client for endpoint testing
+- **Run**: `pytest` or `pytest --cov=app` for coverage
+
+### Frontend Testing
+- **Framework**: Jest + React Testing Library (to be implemented)
+- **Location**: Alongside components (`.test.tsx`)
+- **API Mocking**: MSW for API endpoint mocking
+
+## 🎨 Code Style & Standards
+
+### Backend (Python)
+- **Formatting**: Black + Ruff
+- **Type Hints**: Required on all functions
+- **Async/Await**: All database operations and API endpoints
+- **Pydantic**: All request/response validation
+- **Error Handling**: HTTPException with proper status codes
+
+### Frontend (TypeScript) 
+- **Linting**: ESLint with Next.js config
+- **TypeScript**: Strict mode, no `any` types
+- **Components**: PascalCase naming
+- **API Calls**: Use centralized ApiClient
+- **Styling**: Tailwind CSS utility classes
+
+### API Design Standards
+- RESTful endpoints with proper HTTP methods
+- Consistent JSON response format
+- `/api/v1/` versioning
+- OpenAPI/Swagger docs auto-generated
+- Error responses include message and field info
+
+## 🔒 Security Considerations
+
+### Authentication
+- Never store Clerk secret keys in frontend
+- Use middleware for route protection
+- Validate JWT tokens on backend for all protected routes
+- Implement proper CORS configuration
+
+### Data Protection
+- Use Pydantic validation for all inputs
+- Sanitize database queries (SQLAlchemy handles this)
+- Environment variables for all secrets
+- Never commit `.env` files
+
+## 📈 Development Workflow
+
+### Starting New Features
+1. Check if feature aligns with fitness/SaaS domain
+2. Plan database changes first (create Alembic migration)
+3. Implement backend API endpoints with tests
+4. Create Pydantic schemas for request/response
+5. Build frontend components with proper TypeScript
+6. Add API client methods and endpoint definitions
+7. Test integration between frontend and backend
+8. Update documentation
+
+### Code Quality Checks
+```bash
+# Backend
+cd backend && python -m ruff check .
+cd backend && python -m black --check .
+cd backend && pytest
+
+# Frontend  
+cd frontend && npm run lint
+cd frontend && npm run build
+```
+
+### Database Migrations
+```bash
+# Create migration after model changes
+cd backend && alembic revision --autogenerate -m "Add new feature"
+
+# Apply migrations
+cd backend && alembic upgrade head
+```
+
+## 🎯 Fitness Domain Context
+
+This is a **fitness management SaaS template** focused on:
+- **Gym/Studio Management**: Class scheduling, member management
+- **Personal Training**: Workout tracking, exercise libraries
+- **Nutrition**: Meal planning, food logging, macro tracking  
+- **User Engagement**: Progress tracking, goal setting
+- **Business Operations**: Admin dashboards, role-based access
+
+When implementing new features, consider how they fit into typical fitness business workflows and user journeys.
+
+## 🚫 Important Constraints
+
+- **File Size Limit**: No files > 500 lines (refactor into modules)
+- **Docker First**: Always use Docker Compose for development
+- **Authentication**: Never bypass Clerk - all auth goes through it
+- **Database**: Always use async SQLAlchemy 2.0+ patterns
+- **Type Safety**: TypeScript strict mode, Python type hints required
+- **API Versioning**: All endpoints must use `/api/v1/` prefix
+- **Environment**: All config through environment variables
+
+## 🔄 Template Customization Notes
+
+This is a **template for fitness SaaS platforms**. Users will customize:
+- Branding and UI components
+- Business-specific features (e.g., membership tiers, payment)
+- Workout/class types specific to their niche
+- Nutrition requirements for their target audience
+- Admin features for their operational needs
+
+Guide users in adapting the template while maintaining the architectural patterns and development practices outlined above.
